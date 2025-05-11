@@ -2,7 +2,7 @@ import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // Retrieve the API URL from environment variables
 // NEXT_PUBLIC_ prefix is required for variables to be exposed to the browser in Next.js
-const API_BASE_URL: string = 'http://localhost:5000/api';
+const API_BASE_URL: string = 'https://lets-go-sky.onrender.com/api';
 
 // Create an Axios instance
 const api: AxiosInstance = axios.create({
