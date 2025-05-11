@@ -9,14 +9,8 @@ import FlightCard, { Flight as FlightCardType } from '../../../components/Flight
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaPlaneDeparture, FaPlaneArrival, FaCalendarAlt, FaSpinner, FaExclamationCircle, FaArrowLeft, FaUser, FaExchangeAlt } from 'react-icons/fa';
 
-// Extend the FlightCardType if needed with additional search-specific properties
 interface FlightSearchResult extends FlightCardType {
-  searchRelevance?: number;
-  pricing?: {
-    basePrice: number;
-    taxes: number;
-    discount?: number;
-  };
+  // Additional fields specific to search results if needed
 }
 
 // List of Indian cities for dropdowns
@@ -53,7 +47,7 @@ function SearchPageContent() {
   const [hasSearched, setHasSearched] = useState(false);
 
   // Function to perform flight search
-  const performSearch = async (fromCity: string, toCity: string, travelDate: string, passengerCount: number) => {
+  const performSearch = async (fromCity: string, toCity: string, travelDate: string, pax: number) => {
     setLoading(true);
     setError(null);
     setHasSearched(true);
@@ -71,25 +65,8 @@ function SearchPageContent() {
       
       const { data } = await api.post<FlightSearchResult[]>('/flights/search', payload);
       setFlights(data || []);
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error 
-        ? err.message 
-        : 'Failed to load flight results.';
-      
-      setError(
-        typeof err === 'object' && 
-        err !== null && 
-        'response' in err && 
-        typeof err.response === 'object' && 
-        err.response !== null && 
-        'data' in err.response && 
-        typeof err.response.data === 'object' && 
-        err.response.data !== null && 
-        'message' in err.response.data && 
-        typeof err.response.data.message === 'string' 
-          ? err.response.data.message 
-          : errorMessage
-      );
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to load flight results.');
     } finally {
       setLoading(false);
     }
@@ -129,7 +106,7 @@ function SearchPageContent() {
       setInitialLoading(false);
       setHasSearched(false);
     }
-  }, [searchParamsHook, performSearch]);
+  }, [searchParamsHook]);
 
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -356,7 +333,7 @@ function SearchPageContent() {
                 </div>
                 <h3 className="text-2xl font-semibold text-blue-800 mb-2">No Flights Found</h3>
                 <p className="text-blue-600 mt-1 max-w-md mx-auto">
-                  We couldn&apos;t find flights from <strong className="font-medium">{from}</strong> to <strong className="font-medium">{to}</strong> on <strong className="font-medium">{new Date(date).toLocaleDateString()}</strong>.
+                  We couldn't find flights from <strong className="font-medium">{from}</strong> to <strong className="font-medium">{to}</strong> on <strong className="font-medium">{new Date(date).toLocaleDateString()}</strong>.
                 </p>
                 <p className="text-gray-500 mt-4 text-sm">Try changing your search criteria or selecting different dates.</p>
               </motion.div>

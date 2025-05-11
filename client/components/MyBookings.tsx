@@ -64,7 +64,7 @@ const MyBookings: React.FC = () => {
   }
 
   const { bookings, loading, error, fetchBookings, cancelBooking, generateTicket, setError } = bookingContext;
-  const { user, loading: authLoading } = authContext;
+  const { loading: authLoading } = authContext;
 
   const currentDate = new Date();
   const filteredBookings = bookings
