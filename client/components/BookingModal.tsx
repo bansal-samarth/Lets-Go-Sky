@@ -66,7 +66,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ flight, onClose, numPasseng
   }
 
   const { createBooking, loading: bookingOpLoading, error: bookingOpError, generateTicket, setError: setBookingError } = bookingContext;
-  const { walletBalance, user } = authContext;
+  const { walletBalance } = authContext;
 
   const totalPrice = flight.currentPrice * passengers.length;
 
@@ -120,6 +120,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ flight, onClose, numPasseng
     }
 
     const passengersDataForApi = passengers.map(({ id: _, ...rest }) => ({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ...rest,
       age: parseInt(rest.age, 10),
     }));
