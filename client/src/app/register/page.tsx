@@ -43,9 +43,18 @@ export default function RegisterPage() {
       return;
     }
 
-    const { confirmPassword, ...registrationData } = formData;
-    const success = await register(registrationData);
-    if (success) router.push('/');
+    // Fix: Don't destructure confirmPassword if we're not using it
+    try {
+      const success = await register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phoneNumber: formData.phoneNumber,
+      });
+      if (success) router.push('/');
+    } catch (error) {
+      setClientError('Registration failed. Please try again.');
+    }
   };
 
   const displayError = clientError || authError;
@@ -80,13 +89,17 @@ export default function RegisterPage() {
               Lets Go Sky.
             </h1>
           </motion.div>
-          {/* <p className="mt-2 text-gray-500">Sign in to continue your journey</p> */}
         </div>
 
         {displayError && (
-          <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-3 rounded-lg">
+          <motion.div 
+            className="mb-4 bg-red-50 border-l-4 border-red-400 p-3 rounded-lg"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <p className="text-sm text-red-600">{displayError}</p>
-          </div>
+          </motion.div>
         )}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">

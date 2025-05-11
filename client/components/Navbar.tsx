@@ -2,14 +2,13 @@
 
 import React, { useState, useContext, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { AuthContext, AuthContextType } from '../src/context/AuthContext';
+import { usePathname } from 'next/navigation';
+import { AuthContext } from '../src/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FaPlaneDeparture, 
-  FaBars, 
-  FaTimes, 
-  FaUserCircle, 
+  FaBars,
+  FaTimes,
   FaWallet, 
   FaSignOutAlt, 
   FaSignInAlt, 
@@ -24,7 +23,6 @@ const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
 
   // Close mobile menu on route change
   useEffect(() => {

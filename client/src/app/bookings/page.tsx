@@ -2,9 +2,9 @@
 
 import React, { useContext, useEffect } from 'react';
 import MyBookings from '../../../components/MyBookings'; // Adjust path or use alias @/components/MyBookings
-import { AuthContext, AuthContextType } from '../../context/AuthContext'; // Adjust path or use alias @/context/AuthContext
+import { AuthContext } from '../../context/AuthContext'; // Adjust path or use alias @/context/AuthContext
 import { useRouter } from 'next/navigation';
-import { FaHistory, FaSpinner, FaExclamationTriangle, FaPlaneDeparture } from 'react-icons/fa';
+import { FaHistory, FaSpinner, FaPlaneDeparture } from 'react-icons/fa';
 import Link from 'next/link';
 
 export default function BookingHistoryPage() {

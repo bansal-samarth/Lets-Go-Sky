@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
-import { AuthContext, AuthContextType } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
