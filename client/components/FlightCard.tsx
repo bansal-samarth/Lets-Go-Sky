@@ -3,7 +3,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../src/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { FaPlane, FaRegClock, FaChair, FaExclamationTriangle, FaArrowRight, FaClock, FaTag, FaPlaneArrival, FaPlaneDeparture } from 'react-icons/fa';
+import { FaPlane, FaChair, FaExclamationTriangle, FaArrowRight, FaClock, FaTag } from 'react-icons/fa';
 import { formatPrice, calculateDuration, displayTime, displayShortDate } from '../lib/utils';
 import BookingModal from './BookingModal';
 
@@ -49,8 +49,6 @@ const FlightCard: React.FC<FlightCardProps> = ({ flight, numPassengers }) => {
   const isPriceIncreased = flight.currentPrice > flight.basePrice;
   const isPriceDropped = flight.currentPrice < flight.basePrice;
   const duration = calculateDuration(flight.departureTime, flight.arrivalTime);
-  const departureDate = new Date(flight.departureTime);
-  const arrivalDate = new Date(flight.arrivalTime);
 
   return (
     <>

@@ -119,10 +119,10 @@ const BookingModal: React.FC<BookingModalProps> = ({ flight, onClose, numPasseng
       return;
     }
 
-    const passengersDataForApi = passengers.map(({ id: _, ...rest }) => ({
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ...rest,
-      age: parseInt(rest.age, 10),
+    const passengersDataForApi = passengers.map(({ name, age, gender }) => ({
+      name,
+      gender,
+      age: parseInt(age, 10),
     }));
 
     const result = await createBooking({

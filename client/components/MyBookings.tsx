@@ -2,13 +2,13 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from 'react';
-import { BookingContext, BookingContextType, Booking } from '../src/context/BookingContext';
+import { BookingContext, BookingContextType } from '../src/context/BookingContext';
 import { AuthContext, AuthContextType as AuthContextValueType } from '../src/context/AuthContext';
 import { formatPrice, calculateDuration } from '../lib/utils';
 import {
-  FaPlane, FaRegClock, FaUsers, FaCalendarCheck, FaCalendarTimes, FaBan, FaTicketAlt,
+  FaPlane, FaUsers, FaCalendarCheck, FaCalendarTimes, FaBan, FaTicketAlt,
   FaChevronDown, FaChevronUp, FaSpinner, FaExclamationCircle, FaDownload, FaTimesCircle,
-  FaArrowRight, FaClock, FaCalendarAlt, FaIdCard, FaInfoCircle, FaCreditCard
+  FaClock, FaCalendarAlt, FaIdCard, FaInfoCircle, FaCreditCard
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -40,8 +40,19 @@ const displayTime = (dateString: string): string => {
 };
 
 const MyBookings: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'past' | 'cancelled'>('upcoming');
+  const [expandedBookingId, setExpandedBookingId] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
+  
   const bookingContext = useContext<BookingContextType | null>(BookingContext);
   const authContext = useContext<AuthContextValueType | null>(AuthContext);
+
+  useEffect(() => {
+    if (authContext?.user) {
+      bookingContext?.fetchBookings();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authContext?.user]);
 
   if (!bookingContext || !authContext) {
     return (
@@ -54,17 +65,6 @@ const MyBookings: React.FC = () => {
 
   const { bookings, loading, error, fetchBookings, cancelBooking, generateTicket, setError } = bookingContext;
   const { user, loading: authLoading } = authContext;
-
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'past' | 'cancelled'>('upcoming');
-  const [expandedBookingId, setExpandedBookingId] = useState<string | null>(null);
-  const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    if (user) {
-      fetchBookings();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
   const currentDate = new Date();
   const filteredBookings = bookings
@@ -179,7 +179,11 @@ const MyBookings: React.FC = () => {
         ].map(tabInfo => (
           <button
             key={tabInfo.key}
-            onClick={() => { setActiveTab(tabInfo.key as any); setExpandedBookingId(null); setError(null); }}
+            onClick={() => { 
+              setActiveTab(tabInfo.key as 'upcoming' | 'past' | 'cancelled'); 
+              setExpandedBookingId(null); 
+              setError(null); 
+            }}
             className={`flex items-center py-4 px-5 -mb-px text-sm font-medium focus:outline-none transition-all duration-200 ease-in-out
                         ${activeTab === tabInfo.key
                           ? 'border-b-2 border-blue-600 text-blue-700'
