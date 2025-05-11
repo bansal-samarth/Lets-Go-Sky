@@ -9,9 +9,7 @@ import FlightCard, { Flight as FlightCardType } from '../../../components/Flight
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaPlaneDeparture, FaPlaneArrival, FaCalendarAlt, FaSpinner, FaExclamationCircle, FaArrowLeft, FaUser, FaExchangeAlt } from 'react-icons/fa';
 
-interface FlightSearchResult extends FlightCardType {
-  // Additional fields specific to search results if needed
-}
+type FlightSearchResult = FlightCardType;
 
 // List of Indian cities for dropdowns
 const CITIES = [
@@ -48,7 +46,7 @@ function SearchPageContent() {
   const [hasSearched, setHasSearched] = useState(false);
 
   // Function to perform flight search
-    const performSearch = useCallback(async (fromCity: string, toCity: string, travelDate: string, pax: number) => {
+    const performSearch = useCallback(async (fromCity: string, toCity: string, travelDate: string, _pax: number) => {
     setLoading(true);
     setError(null);
     setHasSearched(true);
@@ -67,7 +65,7 @@ function SearchPageContent() {
       const { data } = await api.post<FlightSearchResult[]>('/flights/search', payload);
       setFlights(data || []);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load flight results.');
+      setError('Failed to load flight results.');
     } finally {
       setLoading(false);
     }
@@ -334,7 +332,7 @@ function SearchPageContent() {
                 </div>
                 <h3 className="text-2xl font-semibold text-blue-800 mb-2">No Flights Found</h3>
                 <p className="text-blue-600 mt-1 max-w-md mx-auto">
-                  We couldn't find flights from <strong className="font-medium">{from}</strong> to <strong className="font-medium">{to}</strong> on <strong className="font-medium">{new Date(date).toLocaleDateString()}</strong>.
+                  We couldn&apos;t find flights from <strong className="font-medium">{from}</strong> to <strong className="font-medium">{to}</strong> on <strong className="font-medium">{new Date(date).toLocaleDateString()}</strong>.
                 </p>
                 <p className="text-gray-500 mt-4 text-sm">Try changing your search criteria or selecting different dates.</p>
               </motion.div>

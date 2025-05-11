@@ -12,7 +12,7 @@ export const formatPrice = (price: number): string => {
   export const calculateDuration = (departureTime: string, arrivalTime: string): string => {
     const departure = new Date(departureTime);
     const arrival = new Date(arrivalTime);
-    let durationMs = arrival.getTime() - departure.getTime();
+    const durationMs = arrival.getTime() - departure.getTime();
   
     if (durationMs < 0) {
       console.warn("calculateDuration: arrivalTime is before departureTime or dates are invalid for flight.", {departureTime, arrivalTime});
