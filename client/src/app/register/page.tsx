@@ -49,10 +49,9 @@ export default function RegisterPage() {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        phoneNumber: formData.phoneNumber,
       });
       if (success) router.push('/');
-    } catch (error) {
+    } catch  {
       setClientError('Registration failed. Please try again.');
     }
   };

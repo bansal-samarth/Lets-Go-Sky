@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useContext, FormEvent, Suspense } from 'react';
+import React, { useState, useEffect, useContext, FormEvent, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AuthContext } from '../../context/AuthContext';
@@ -37,6 +37,7 @@ function SearchPageContent() {
   const [from, setFrom] = useState(searchParamsHook.get('from') || '');
   const [to, setTo] = useState(searchParamsHook.get('to') || '');
   const [date, setDate] = useState(searchParamsHook.get('date') || new Date().toISOString().split('T')[0]);
+  // const [passengers, setPassengers] = useState(parseInt(searchParamsHook.get('passengers') || '1', 10));
   const [passengers, setPassengers] = useState(parseInt(searchParamsHook.get('passengers') || '1', 10));
 
   const [flights, setFlights] = useState<FlightSearchResult[]>([]);
@@ -47,7 +48,7 @@ function SearchPageContent() {
   const [hasSearched, setHasSearched] = useState(false);
 
   // Function to perform flight search
-  const performSearch = async (fromCity: string, toCity: string, travelDate: string, pax: number) => {
+    const performSearch = useCallback(async (fromCity: string, toCity: string, travelDate: string, pax: number) => {
     setLoading(true);
     setError(null);
     setHasSearched(true);
@@ -70,7 +71,7 @@ function SearchPageContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   // Handle initial search based on URL params only if there are query parameters
   useEffect(() => {
@@ -106,7 +107,7 @@ function SearchPageContent() {
       setInitialLoading(false);
       setHasSearched(false);
     }
-  }, [searchParamsHook]);
+  }, [searchParamsHook, performSearch]);
 
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

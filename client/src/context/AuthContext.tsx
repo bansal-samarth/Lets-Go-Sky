@@ -1,8 +1,7 @@
-// src/context/AuthContext.tsx
 "use client";
 
 import React, { createContext, useState, useEffect, useCallback, ReactNode, Dispatch, SetStateAction } from 'react';
-import api from '../services/api'; // Corrected path, as context is in src/context and services is in client/services
+import api from '../services/api';
 import { useRouter } from 'next/navigation';
 
 // Define a type for the user object from your backend
@@ -10,26 +9,23 @@ export interface User {
   _id: string;
   name: string;
   email: string;
-  walletBalance: number; // Assuming backend provides this
-  token?: string; // Token might be part of the user object response or separate
+  walletBalance: number;
+  token?: string;
   // Add other user properties your backend returns
-  [key: string]: any; // Allow other dynamic properties
 }
 
 // Define the type for the context value
 export interface AuthContextType {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
-  loading: boolean; // True during initial auth check AND during login/register operations
+  loading: boolean;
   authError: string | null;
   setAuthError: Dispatch<SetStateAction<string | null>>;
   login: (email: string, password: string) => Promise<boolean>;
   register: (userData: Omit<User, '_id' | 'walletBalance' | 'token'> & { password?: string }) => Promise<boolean>;
   logout: () => void;
   walletBalance: number;
-  fetchWalletBalance: () // Add this function if you need to refresh wallet separately
-    => Promise<void>;
-  // updateWalletBalance: (newTotalAmount: number) => Promise<void>; // Add later if needed
+  fetchWalletBalance: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -40,7 +36,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Initial loading for session check
+  const [loading, setLoading] = useState<boolean>(true);
   const [authError, setAuthError] = useState<string | null>(null);
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const router = useRouter();
@@ -56,12 +52,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [router]);
 
   const fetchWalletBalance = useCallback(async () => {
-    if (!localStorage.getItem('token')) return; // Only if logged in
+    if (!localStorage.getItem('token')) return;
     try {
       const { data } = await api.get<{ walletBalance: number }>('/users/wallet');
       setWalletBalance(data.walletBalance);
-    } catch (err: any) {
-      console.error('AuthContext: Error fetching wallet balance:', err.response?.data?.message || err.message);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : JSON.stringify(err);
+      console.error('AuthContext: Error fetching wallet balance:', msg);
     }
   }, []);
 
@@ -77,10 +74,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           if (userData.walletBalance !== undefined) {
             setWalletBalance(userData.walletBalance);
           } else {
-            await fetchWalletBalance(); // Fallback if profile doesn't include it
+            await fetchWalletBalance();
           }
-        } catch (error) {
-          console.error('AuthContext: Session restore failed', error);
+        } catch (err: unknown) {
+          const msg = err instanceof Error ? err.message : JSON.stringify(err);
+          console.error('AuthContext: Session restore failed', msg);
           logout();
         }
       }
@@ -89,32 +87,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkUserStatus();
   }, [logout, fetchWalletBalance]);
 
-
   const login = async (email: string, password: string): Promise<boolean> => {
-    setLoading(true); // Indicate auth operation is in progress
+    setLoading(true);
     setAuthError(null);
     try {
-      // Backend should return user object including the token, or token separately
       const { data } = await api.post<User>('/users/login', { email, password });
-      
       if (!data.token) {
-        console.error("Login response missing token:", data);
-        setAuthError("Login failed: Authentication details not received.");
+        setAuthError('Login failed: Authentication details not received.');
         setLoading(false);
         return false;
       }
-
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data)); // Store full user object if needed
+      localStorage.setItem('user', JSON.stringify(data));
       api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
       setUser(data);
       setWalletBalance(data.walletBalance || 0);
       setLoading(false);
       return true;
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Login failed. Please check credentials.';
+    } catch (err: unknown) {
+      let errorMessage = 'Login failed. Please check credentials.';
+      if (err instanceof Error) errorMessage = err.message;
       setAuthError(errorMessage);
-      console.error('Login error:', err);
+      console.error('Login error:', errorMessage);
       setLoading(false);
       return false;
     }
@@ -126,27 +120,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(true);
     setAuthError(null);
     try {
-      // Backend should return user object including the token upon successful registration
       const { data } = await api.post<User>('/users/register', userData);
-
       if (!data.token) {
-        console.error("Register response missing token:", data);
-        setAuthError("Registration failed: Authentication details not received.");
+        setAuthError('Registration failed: Authentication details not received.');
         setLoading(false);
         return false;
       }
-
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data));
       api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
       setUser(data);
-      setWalletBalance(data.walletBalance || 50000); // Set initial wallet balance
+      setWalletBalance(data.walletBalance || 0);
       setLoading(false);
       return true;
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
+    } catch (err: unknown) {
+      let errorMessage = 'Registration failed. Please try again.';
+      if (err instanceof Error) errorMessage = err.message;
       setAuthError(errorMessage);
-      console.error('Registration error:', err);
+      console.error('Registration error:', errorMessage);
       setLoading(false);
       return false;
     }
@@ -165,14 +156,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     fetchWalletBalance,
   };
 
-  // This loading state is for the initial checkUserStatus.
-  // The individual login/register functions handle their own "authOpLoading" (renamed to just `loading` in context)
   if (loading && !user && typeof window !== 'undefined' && !localStorage.getItem('token')) {
-     return (
-        <div className="fixed inset-0 bg-white flex items-center justify-center z-[100]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-brand-primary"></div>
-        </div>
-      );
+    return (
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-[100]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-brand-primary"></div>
+      </div>
+    );
   }
 
   return (
