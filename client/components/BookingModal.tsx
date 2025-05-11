@@ -3,26 +3,16 @@
 
 import React, { useState, useContext, FormEvent, useEffect } from 'react';
 // Adjust these import paths based on your actual folder structure or path aliases
-import { BookingContext, Booking, BookingContextType as BookingContextValueType } from '../src/context/BookingContext';
-import { AuthContext, User, AuthContextType as AuthContextValueType } from '../src/context/AuthContext';
+import { BookingContext, Booking } from '../src/context/BookingContext';
+import { AuthContext } from '../src/context/AuthContext';
 import { Flight } from './FlightCard'; // Assuming FlightCard is in the same components folder
 import { formatPrice } from '../lib/utils'; // Assuming utils are in client/lib/
 import {
   FaTimes, FaUserPlus, FaTrashAlt, FaCheckCircle, FaWallet, FaPlane,
-  FaCalendarAlt, FaUsers, FaCreditCard, FaSpinner, FaTicketAlt,
+  FaUsers, FaCreditCard, FaSpinner, FaTicketAlt,
   FaExclamationCircle, FaChevronRight, FaClock, FaMapMarkerAlt
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
-
-// Helper to format date for display
-const displayFullDate = (dateString: string) => {
-  if (!dateString) return "N/A";
-  try {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-    });
-  } catch { return "Invalid Date"; }
-};
 
 interface PassengerInputState {
   id: string;
@@ -38,8 +28,32 @@ interface BookingModalProps {
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({ flight, onClose, numPassengers }) => {
+  // Initialize hooks at the top level, never conditionally
+  const [passengers, setPassengers] = useState<PassengerInputState[]>([]);
+  const [modalError, setModalError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [confirmedBooking, setConfirmedBooking] = useState<Booking | null>(null);
+  
   const bookingContext = useContext(BookingContext);
   const authContext = useContext(AuthContext);
+  
+  useEffect(() => {
+    // Initialize passengers based on numPassengers
+    const initialPassengers: PassengerInputState[] = Array.from({ length: Math.max(1, numPassengers) }, (_, i) => ({
+      id: `passenger-${Date.now()}-${i}`,
+      name: i === 0 && authContext?.user?.name ? authContext.user.name : '',
+      age: '',
+      gender: 'male',
+    }));
+    setPassengers(initialPassengers);
+  }, [numPassengers, authContext?.user?.name]);
+
+  useEffect(() => {
+    if (bookingContext) {
+      bookingContext.setError(null); // Clear context error
+    }
+    setModalError(null);   // Clear local error
+  }, [flight, numPassengers, bookingContext]);
 
   if (!bookingContext || !authContext) {
     return (
@@ -53,23 +67,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ flight, onClose, numPasseng
 
   const { createBooking, loading: bookingOpLoading, error: bookingOpError, generateTicket, setError: setBookingError } = bookingContext;
   const { walletBalance, user } = authContext;
-
-  const initialPassengers: PassengerInputState[] = Array.from({ length: Math.max(1, numPassengers) }, (_, i) => ({
-    id: `passenger-${Date.now()}-${i}`,
-    name: i === 0 ? (user?.name || '') : '',
-    age: '',
-    gender: 'male',
-  }));
-
-  const [passengers, setPassengers] = useState<PassengerInputState[]>(initialPassengers);
-  const [modalError, setModalError] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [confirmedBooking, setConfirmedBooking] = useState<Booking | null>(null);
-
-  useEffect(() => {
-    setBookingError(null); // Clear context error
-    setModalError(null);   // Clear local error
-  }, [flight, numPassengers, setBookingError]);
 
   const totalPrice = flight.currentPrice * passengers.length;
 
@@ -122,7 +119,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ flight, onClose, numPasseng
       return;
     }
 
-    const passengersDataForApi = passengers.map(({ id, ...rest }) => ({
+    const passengersDataForApi = passengers.map(({ id: _, ...rest }) => ({
       ...rest,
       age: parseInt(rest.age, 10),
     }));
