@@ -9,7 +9,10 @@ import FlightCard, { Flight as FlightCardType } from '../../../components/Flight
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaPlaneDeparture, FaPlaneArrival, FaCalendarAlt, FaSpinner, FaExclamationCircle, FaArrowLeft, FaUser, FaExchangeAlt } from 'react-icons/fa';
 
-type FlightSearchResult = FlightCardType;
+interface FlightSearchResult extends FlightCardType {
+  // This is a placeholder for potential additional fields
+  searchRelevance?: number;
+}
 
 // List of Indian cities for dropdowns
 const CITIES = [
@@ -35,7 +38,6 @@ function SearchPageContent() {
   const [from, setFrom] = useState(searchParamsHook.get('from') || '');
   const [to, setTo] = useState(searchParamsHook.get('to') || '');
   const [date, setDate] = useState(searchParamsHook.get('date') || new Date().toISOString().split('T')[0]);
-  // const [passengers, setPassengers] = useState(parseInt(searchParamsHook.get('passengers') || '1', 10));
   const [passengers, setPassengers] = useState(parseInt(searchParamsHook.get('passengers') || '1', 10));
 
   const [flights, setFlights] = useState<FlightSearchResult[]>([]);
@@ -46,7 +48,7 @@ function SearchPageContent() {
   const [hasSearched, setHasSearched] = useState(false);
 
   // Function to perform flight search
-    const performSearch = useCallback(async (fromCity: string, toCity: string, travelDate: string, _pax: number) => {
+  const performSearch = useCallback(async (fromCity: string, toCity: string, travelDate: string, passengers: number) => {
     setLoading(true);
     setError(null);
     setHasSearched(true);
@@ -64,8 +66,11 @@ function SearchPageContent() {
       
       const { data } = await api.post<FlightSearchResult[]>('/flights/search', payload);
       setFlights(data || []);
-    } catch (err: any) {
-      setError('Failed to load flight results.');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? 
+        err.message : 
+        'Failed to load flight results.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
