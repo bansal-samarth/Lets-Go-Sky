@@ -87,7 +87,7 @@ const Navbar: React.FC = () => {
               </div>
             </div>
             <span className="ml-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              SkyBooker
+              Lets Go Sky.
             </span>
           </Link>
 

@@ -77,7 +77,7 @@ export default function RegisterPage() {
               </div>
             </div>
             <h1 className="ml-3 text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              SkyBooker
+              Lets Go Sky.
             </h1>
           </motion.div>
           {/* <p className="mt-2 text-gray-500">Sign in to continue your journey</p> */}

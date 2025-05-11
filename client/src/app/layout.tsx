@@ -10,8 +10,8 @@ import Footer from '@/components/Footer';   // Using path alias
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'SkyBooker - Flights',
-  description: 'Book your flights with SkyBooker.',
+  title: 'Lets Go Sky. - Flights',
+  description: 'Book your flights with Lets Go Sky..',
 }
 
 export default function RootLayout({

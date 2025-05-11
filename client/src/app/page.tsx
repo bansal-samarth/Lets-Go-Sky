@@ -70,7 +70,7 @@ export default function HomePage() {
                   </svg>
                 </div>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent ml-3">SkyBooker</h1>
+              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent ml-3">Lets Go Sky.</h1>
             </motion.div>
 
             {user ? (
@@ -195,7 +195,7 @@ export default function HomePage() {
         transition={{ delay: 1 }}
       >
         <p className="flex items-center justify-center">
-          <span>© {new Date().getFullYear()} SkyBooker</span>
+          <span>© {new Date().getFullYear()} Lets Go Sky.</span>
           <span className="mx-2">•</span>
           <span>Elevate Your Journey</span>
         </p>

@@ -536,7 +536,7 @@ exports.generateTicket = async (req, res) => {
             <div class="ticket-header">
               <div class="ticket-logo">
                 <i class="fas fa-plane"></i>
-                <span>SkyTicket</span>
+                <span>Lets Go Sky.</span>
               </div>
               <div class="pnr-container">
                 <span class="pnr-label">BOOKING REFERENCE</span>
@@ -656,7 +656,7 @@ exports.generateTicket = async (req, res) => {
     await browser.close();
 
     // Stream PDF to client
-    res.download(filePath, `SkyTicket_${booking.pnrNumber}.pdf`, err => {
+    res.download(filePath, `LetsGoSky_${booking.pnrNumber}.pdf`, err => {
       if (err) return res.status(500).json({ message: 'Error sending file' });
       fs.unlink(filePath, () => {});
     });

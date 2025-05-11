@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
         <div className="flex flex-col items-center mb-12 text-center">
           <div className="flex items-center mb-4">
             <FaPlane className="h-8 w-8 text-blue-400" />
-            <span className="ml-2 text-2xl font-bold text-white">SkyBooker</span>
+            <span className="ml-2 text-2xl font-bold text-white">Lets Go Sky.</span>
           </div>
           <p className="text-blue-300 max-w-md">
             Making your journey through the skies seamless and comfortable.
@@ -110,7 +110,7 @@ const Footer: React.FC = () => {
             </a>
           </div>
           <p className="mt-8 md:mt-0 text-center md:text-left text-blue-300 md:order-1">
-            © {currentYear} SkyBooker, Inc. All rights reserved.
+            © {currentYear} Lets Go Sky., Inc. All rights reserved.
           </p>
         </div>
       </div>

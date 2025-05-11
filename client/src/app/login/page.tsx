@@ -59,7 +59,7 @@ export default function LoginPage() {
               </div>
             </div>
             <h1 className="ml-3 text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              SkyBooker
+              Lets Go Sky.
             </h1>
           </motion.div>
           <h2 className="mt-4 text-2xl font-semibold text-gray-800">Welcome Back</h2>
