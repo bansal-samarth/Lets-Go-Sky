@@ -48,7 +48,7 @@ function SearchPageContent() {
   const [hasSearched, setHasSearched] = useState(false);
 
   // Function to perform flight search
-  const performSearch = useCallback(async (fromCity: string, toCity: string, travelDate: string, passengers: number) => {
+  const performSearch = useCallback(async (fromCity: string, toCity: string, travelDate: string) => {
     setLoading(true);
     setError(null);
     setHasSearched(true);
@@ -100,7 +100,7 @@ function SearchPageContent() {
       
       const currentSearchId = `${fromParam}-${toParam}-${dateParam}-${paxParam}`;
       
-      performSearch(fromParam, toParam, dateParam, parseInt(paxParam || '1', 10))
+      performSearch(fromParam, toParam, dateParam)
         .finally(() => {
           setInitialLoading(false);
           setLastSearchId(currentSearchId);
@@ -132,7 +132,7 @@ function SearchPageContent() {
     // since URL didn't change and useEffect won't trigger
     if (currentSearchId === lastSearchId) {
       setFlights([]);
-      performSearch(from, to, date, passengers);
+      performSearch(from, to, date);
     }
     
     // Update last search ID
