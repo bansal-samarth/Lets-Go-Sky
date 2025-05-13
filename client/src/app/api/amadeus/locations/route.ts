@@ -76,9 +76,10 @@ export async function GET(request: NextRequest) {
 
     const data = await resp.json();
     return NextResponse.json(data);
-  } catch (e: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: e.message || "Unknown error" },
+      { error: errorMessage },
       { status: 500 }
     );
   }

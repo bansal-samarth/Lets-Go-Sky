@@ -13,6 +13,18 @@ export interface Location {
   cityName: string;
 }
 
+// Define interface for location data from API
+interface LocationApiResponse {
+  id: string;
+  iataCode: string;
+  name: string;
+  detailedName: string;
+  subType: "CITY" | "AIRPORT";
+  address: {
+    cityName: string;
+  };
+}
+
 interface Props {
   countryCode?: string;
   placeholder?: string;
@@ -43,25 +55,23 @@ export default function LocationAutosuggest({
     }
   }, [selectedLocation]);
 
-  const fetchLocations = useCallback(
-    debounce(async (q: string) => {
-      if (q.length < 2) {
-        setResults([]);
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
+  const fetchLocations = useCallback((q: string) => {
+    if (q.length < 2) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
 
-      try {
-        const res = await fetch(
-          `/api/amadeus/locations?keyword=${encodeURIComponent(
-            q
-          )}&countryCode=${countryCode}`
-        );
-        const json = await res.json();
-
+    fetch(
+      `/api/amadeus/locations?keyword=${encodeURIComponent(
+        q
+      )}&countryCode=${countryCode}`
+    )
+      .then((res) => res.json())
+      .then((json) => {
         // Map in the cityName from address
-        const mapped: Location[] = (json.data || []).map((loc: any) => ({
+        const mapped: Location[] = (json.data || []).map((loc: LocationApiResponse) => ({
           id: loc.id,
           iataCode: loc.iataCode,
           name: loc.name,
@@ -71,18 +81,25 @@ export default function LocationAutosuggest({
         }));
 
         setResults(mapped);
-      } catch {
+      })
+      .catch(() => {
         setResults([]);
-      } finally {
+      })
+      .finally(() => {
         setLoading(false);
-      }
+      });
+  }, [countryCode]);
+
+  const debouncedFetch = useCallback(
+    debounce((q: string) => {
+      fetchLocations(q);
     }, 300),
-    [countryCode]
+    [fetchLocations]
   );
 
   useEffect(() => {
-    fetchLocations(term);
-  }, [term, fetchLocations]);
+    debouncedFetch(term);
+  }, [term, debouncedFetch]);
 
   const handleClear = () => {
     setTerm("");

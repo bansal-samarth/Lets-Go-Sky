@@ -368,7 +368,7 @@ function SearchPageContent() {
                   No Flights Found
                 </h3>
                 <p className="text-blue-600 mt-1 max-w-md mx-auto">
-                  We couldn't find flights from{" "}
+                  We couldn&apos;t find flights from{" "}
                   <strong>{fromLoc?.iataCode}</strong> to{" "}
                   <strong>{toLoc?.iataCode}</strong> on{" "}
                   <strong>{new Date(date).toLocaleDateString()}</strong>.
