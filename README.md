@@ -40,7 +40,8 @@
 
 ## 🚀 Live Demo
 
-**📱 Frontend:** [https://lets-go-sky.vercel.app/](https://lets-go-sky.vercel.app/)  
+**📱 Frontend:** [https://lets-go-sky.vercel.app/](https://lets-go-sky.vercel.app/)
+
 **⚙️ Backend API:** [https://lets-go-sky.onrender.com/api](https://lets-go-sky.onrender.com/api)
 
 ---
@@ -49,11 +50,11 @@
 
 Let's Go Sky is a full-stack flight-booking platform built with Next.js on the front end and Node.js/Express on the back end. It offers:
 
-- **Intuitive flight search** (origin, destination, date)  
-- **Dynamic pricing engine** that adapts based on user interactions  
-- **Seamless booking flow** with PDF e-ticket generation  
-- **Built-in user wallet** for quick, hassle-free payments  
-- **Secure JWT authentication** and robust booking management  
+* **Intuitive flight search** (origin, destination, date)
+* **Dynamic pricing engine** that adapts based on user interactions
+* **Seamless booking flow** with PDF e-ticket generation
+* **Built-in user wallet** for quick, hassle-free payments
+* **Secure JWT authentication** and robust booking management
 
 Our goal: deliver a sleek, responsive UX backed by scalable, maintainable architecture.
 
@@ -61,52 +62,60 @@ Our goal: deliver a sleek, responsive UX backed by scalable, maintainable archit
 
 ## ✨ Key Features
 
-- ### Intelligent Flight Search  
-  - Airport auto-suggest from external APIs (e.g., AirLabs)  
-  - Filter by date, time, price, stops  
 
-- ### Dynamic Pricing Engine  
-  - Price increase of 10% after 3 views in 5 minutes  
-  - Automatic price reset after 10 minutes  
 
-- ### Seamless Booking & E-Tickets  
-  - Book for one or multiple passengers  
-  - Instant PDF ticket generation via **pdfkit**  
+### Intelligent Flight Search
 
-- ### Integrated Wallet  
-  - Default starting balance (e.g., ₹50,000)  
-  - Deducted automatically at booking time  
+* Airport auto-suggest from external APIs (e.g., AirLabs)
 
-- ### Secure Authentication  
-  - JWT-based registration and login  
-  - Password hashing with **bcryptjs**  
+* **City & Airport autosuggestion using Amadeus API**: Type any part of a city or airport name/code to see live suggestions, complete with IATA codes and types (City or Airport).
 
-- ### Booking Management  
-  - View upcoming, past, and cancelled bookings  
-  - Cancel flights and refund to wallet  
+* Filter by date, time, price, stops
 
-- ### Responsive UI & Animations  
-  - Next.js App Router + Tailwind CSS  
-  - Framer Motion for smooth transitions  
+
+
+### Dynamic Pricing Engine
+
+* Price increase of 10% after 3 views in 5 minutes
+
+* Automatic price reset after 10 minutes
+
+
+### Seamless Booking & E-Tickets
+
+* Book for one or multiple passengers
+
+* Instant PDF ticket generation via **pdfkit**
+
+
+### Integrated Wallet
+
+* Default starting balance (e.g., ₹50,000)
+
+* Deducted automatically at booking time
+
+
+### Secure Authentication
+
+* JWT-based registration and login
+
+* Password hashing with **bcryptjs**
+
+
+### Booking Management
+
+* View upcoming, past, and cancelled bookings
+
+* Cancel flights and refund to wallet
+
+
+### Responsive UI & Animations
+
+* Next.js App Router + Tailwind CSS
+  
+* Framer Motion for smooth transitions
 
 ---
-
-## 💻 Tech Stack
-
-| Layer             | Technologies & Libraries                                 |
-| ----------------- | --------------------------------------------------------- |
-| **Frontend**      | Next.js, React, TypeScript, Tailwind CSS, Axios          |
-| **Animations**    | Framer Motion, React Icons                               |
-| **Backend**       | Node.js, Express.js, JavaScript (TypeScript optional)    |
-| **Database**      | MongoDB with Mongoose ORM                                |
-| **Auth & Security** | JSON Web Tokens (JWT), bcryptjs                          |
-| **PDF Generation** | pdfkit                                                  |
-| **APIs**          | External Airport Data (AirLabs)                          |
-| **Deployment**    | Backend on Render.com; Frontend on Vercel (recommended)  |
-
----
-
-## 🏗️ Architecture
 
 ## 🏗️ Architecture
 
@@ -139,10 +148,6 @@ Our goal: deliver a sleek, responsive UX backed by scalable, maintainable archit
                                          │                                 │
                                          └─────────────────────────────────┘
 ```
-
-<div align="center">
-  <em>High-level data flow between user, frontend, backend, and external services.</em>
-</div>
 
 ---
 
@@ -231,9 +236,13 @@ sequenceDiagram
 
    ```env
    NEXT_PUBLIC_API_URL=http://localhost:5000/api
+   AMADEUS_CLIENT_ID=<your_amadeus_api_key>
+   AMADEUS_CLIENT_SECRET=<your_amadeus_secret_key>
    ```
 4. Start dev server: `npm run dev`
 5. Visit `http://localhost:3000`
+
+> **Note:** After adding autosuggestion, ensure your Amadeus API credentials are set as above.
 
 ---
 
@@ -256,6 +265,7 @@ sequenceDiagram
 ---
 
 ## 🖼️ Screenshots
+
 
 <table align="center">
   <tr>
