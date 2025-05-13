@@ -57,8 +57,8 @@ exports.searchFlights = async (req, res) => {
     nextDay.setDate(nextDay.getDate() + 7);
     
     let query = {
-      departureCity: from,
-      arrivalCity: to,
+      departureAirportCode: from,
+      arrivalAirportCode: to,
       departureTime: {
         $gte: searchDate,
         $lt: nextDay
